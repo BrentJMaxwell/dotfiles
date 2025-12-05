@@ -1,0 +1,17 @@
+[user]
+    name = Brent
+    # Default to personal, or leave blank to force specific folders
+    email = theheretic@gmail.com
+
+[includeIf "gitdir:~/git/personal/"]
+    path = ~/.gitconfig-personal
+
+[includeIf "gitdir:~/git/snx/"]
+    path = ~/.gitconfig-snx
+
+[core]
+    editor = nano
+    excludesfile = ~/.gitignore_global
+
+[init]
+    defaultBranch = main
