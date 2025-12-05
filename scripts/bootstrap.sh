@@ -66,8 +66,18 @@ stow aws
 stow ssh
 
 # 5. AWS Setup (Optional Helper)
-if [ ! -f ~/.aws/credentials ]; then
-    echo "AWS Credentials not found. Please run 'aws configure' manually."
+if [ ! -f ~/.aws/config ]; then
+    echo "AWS config not found. Please run 'aws configure' manually."
+fi
+
+# 6. Change Shell to Zsh
+# Check if the current shell is already zsh
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo "Changing default shell to zsh..."
+    # This will prompt for password
+    chsh -s $(which zsh)
+else
+    echo "Already using zsh."
 fi
 
 echo "✅ Dotfiles setup complete! Please restart your terminal."
