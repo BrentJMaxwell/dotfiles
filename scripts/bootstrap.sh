@@ -40,6 +40,20 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     rm "$HOME/.zshrc" 
 fi
 
+# 3.a. Install Custom Plugins (Optional but recommended)
+# Example: zsh-autosuggestions and syntax-highlighting
+ZSH_CUSTOM="$ZSH_DIR/custom"
+
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
+    echo "Installing zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM}/plugins/zsh-autosuggestions
+fi
+
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
+    echo "Installing zsh-syntax-highlighting..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting
+fi
+
 # 4. Stow (Symlink) Configs
 echo "Stowing dotfiles..."
 cd ~/dotfiles
