@@ -55,15 +55,51 @@ fi
 
 # 4. Stow (Symlink) Configs
 echo "Stowing dotfiles..."
-cd ~/dotfiles
+cd ~/git/personal/dotfiles
 
-# Loop through directories and stow them
-# This symlinks everything inside the folder to $HOME
-stow git
-stow zsh
-stow ghostty
-stow aws
-stow ssh
+BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+
+# Function to backup existing files before stowing
+backup_if_exists() {
+    local file="$1"
+    if [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
+        echo "Backing up existing $file..."
+        mkdir -p "$BACKUP_DIR/$(dirname "$file")"
+        mv "$HOME/$file" "$BACKUP_DIR/$file"
+    elif [ -L "$HOME/$file" ]; then
+        # Remove existing symlinks (likely from previous stow)
+        rm -f "$HOME/$file"
+    fi
+}
+
+# Backup existing configs that would conflict with stow
+# Git configs
+backup_if_exists ".gitconfig"
+backup_if_exists ".gitconfig-personal"
+backup_if_exists ".gitconfig-snx"
+
+# Zsh config
+backup_if_exists ".zshrc"
+
+# Ghostty config
+backup_if_exists ".config/ghostty"
+
+# AWS config
+backup_if_exists ".aws"
+
+# SSH config (only the config file, not keys)
+backup_if_exists ".ssh/config"
+
+if [ -d "$BACKUP_DIR" ]; then
+    echo "📦 Existing configs backed up to: $BACKUP_DIR"
+fi
+
+# Stow each package (target home directory explicitly)
+stow -t "$HOME" git
+stow -t "$HOME" zsh
+stow -t "$HOME" ghostty
+stow -t "$HOME" aws
+stow -t "$HOME" ssh
 
 # 5. AWS Setup (Optional Helper)
 if [ ! -f ~/.aws/config ]; then
