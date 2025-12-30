@@ -11,11 +11,11 @@ case "${OS}" in
     Linux*)     
         if [ -f /etc/arch-release ]; then
             echo "Detected Arch Linux"
-            sudo pacman -Syu --noconfirm git zsh stow aws-cli base-devel
+            sudo pacman -Syu --noconfirm git zsh stow aws-cli base-devel tmux
             # Install yay or paru if needed for AUR packages like ghostty
         elif grep -q Microsoft /proc/version; then
             echo "Detected WSL"
-            sudo apt update && sudo apt install -y git zsh stow awscli build-essential
+            sudo apt update && sudo apt install -y git zsh stow awscli build-essential tmux
         fi
         ;;
     Darwin*)    
@@ -24,7 +24,7 @@ case "${OS}" in
         if ! command -v brew &> /dev/null; then
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
-        brew install git zsh stow awscli ghostty
+        brew install git zsh stow awscli ghostty tmux
         ;;
     *)          
         echo "Unknown OS: ${OS}" 
@@ -51,6 +51,13 @@ fi
 if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
     echo "Installing zsh-syntax-highlighting..."
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+fi
+
+# 3.b. Install Tmux Plugin Manager (TPM)
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPM_DIR" ]; then
+    echo "Installing Tmux Plugin Manager (TPM)..."
+    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
 fi
 
 # 4. Stow (Symlink) Configs
@@ -90,6 +97,9 @@ backup_if_exists ".aws"
 # SSH config (only the config file, not keys)
 backup_if_exists ".ssh/config"
 
+# Tmux config
+backup_if_exists ".tmux.conf"
+
 if [ -d "$BACKUP_DIR" ]; then
     echo "📦 Existing configs backed up to: $BACKUP_DIR"
 fi
@@ -100,10 +110,19 @@ stow -t "$HOME" zsh
 stow -t "$HOME" ghostty
 stow -t "$HOME" aws
 stow -t "$HOME" ssh
+stow -t "$HOME" tmux
 
 # 5. AWS Setup (Optional Helper)
 if [ ! -f ~/.aws/config ]; then
     echo "AWS config not found. Please run 'aws configure' manually."
+fi
+
+# 5.a. Tmux Plugin Installation
+if [ -f "$TPM_DIR/bin/install_plugins" ]; then
+    echo "Installing tmux plugins..."
+    "$TPM_DIR/bin/install_plugins"
+else
+    echo "⚠️  Please install tmux plugins manually: prefix + I (usually Ctrl+b, then I) in tmux"
 fi
 
 # 6. Change Shell to Zsh

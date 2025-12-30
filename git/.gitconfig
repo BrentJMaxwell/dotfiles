@@ -1,12 +1,24 @@
 [user]
     name = Brent
-    # Default to personal, or leave blank to force specific folders
-    email = theheretic@gmail.com
+    # Don't set a default email - force per-directory configuration
 
-[includeIf "gitdir:~/git/personal/"]
+# Portable configuration that works on both macOS and Linux
+# Git 2.13+ supports tilde expansion in includeIf directives
+# The gitdir/i: prefix makes it case-insensitive (useful for macOS)
+# The trailing slash ensures it matches all subdirectories
+
+# Match repositories in ~/git/personal/ or ~/Git/personal/
+[includeIf "gitdir/i:~/git/personal/"]
     path = ~/.gitconfig-personal
 
-[includeIf "gitdir:~/git/snx/"]
+[includeIf "gitdir/i:~/Git/personal/"]
+    path = ~/.gitconfig-personal
+
+# Match repositories in ~/git/snx/ or ~/Git/snx/
+[includeIf "gitdir/i:~/git/snx/"]
+    path = ~/.gitconfig-snx
+
+[includeIf "gitdir/i:~/Git/snx/"]
     path = ~/.gitconfig-snx
 
 [core]
