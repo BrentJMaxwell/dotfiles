@@ -1,6 +1,6 @@
 # Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
-# theme = "catppuccin-mocha"
+# config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+theme = catppuccin-macchiato.conf
 
 # Font
 # font-family = "CaskaydiaMono Nerd Font"
@@ -30,3 +30,10 @@ keybind = super+control+shift+alt+arrow_right=resize_split:right,100
 
 # Slowdown mouse scrolling
 mouse-scroll-multiplier = 0.95
+
+# Shaders
+# More here: https://catskull.net/fun-with-ghostty-shaders.html and here: https://github.com/0xhckr/ghostty-shaders 
+# and here: https://www.shadertoy.com/ and here: https://github.com/sahaj-b/ghostty-cursor-shaders
+#custom-shader = ~/.config/ghostty/shaders/matrix-hallway.glsl
+custom-shader = ~/.config/ghostty/shaders/just-snow.glsl
+#custom-shader = shaders/cursor_warp.glsl
