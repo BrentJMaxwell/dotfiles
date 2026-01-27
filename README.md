@@ -42,6 +42,11 @@ Optional one-time installs:
 INSTALL_PACKAGES=1 INSTALL_TPM_PLUGINS=1 CHANGE_SHELL=1 ./scripts/bootstrap.sh
 ```
 
+Env var behavior:
+- `INSTALL_PACKAGES=1` runs OS package installs/updates
+- `INSTALL_TPM_PLUGINS=1` installs tmux plugins via TPM
+- `CHANGE_SHELL=1` changes the default shell to zsh
+
 ## What's Included
 
 ### Terminal & Shell
@@ -82,8 +87,9 @@ dotfiles/
 After running the bootstrap script:
 
 1. **AWS Configuration**: Run `aws configure` if needed
-2. **Tmux Plugins**: If automatic installation fails, press `Ctrl+b` then `I` inside tmux to install plugins
-3. **Shell Change**: Restart your terminal after installation
+2. **Tmux Plugins**: If you skipped `INSTALL_TPM_PLUGINS=1` or it fails, press `Ctrl+b` then `I` inside tmux to install plugins
+3. **Shell Change**: If you used `CHANGE_SHELL=1`, restart your terminal after installation
+4. **Optional flags**: Re-run with `INSTALL_PACKAGES=1`, `INSTALL_TPM_PLUGINS=1`, or `CHANGE_SHELL=1` when you explicitly want those actions
 
 ## Tmux Configuration
 
@@ -108,4 +114,4 @@ git pull
 ./scripts/bootstrap.sh
 ```
 
-Existing configurations are backed up to `~/.dotfiles-backup-{timestamp}/` before stowing new ones.
+Existing configurations are backed up to `~/.dotfiles-backup/` before stowing new ones.
