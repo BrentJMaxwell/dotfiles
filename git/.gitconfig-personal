@@ -2,3 +2,6 @@
     name = Brent
     email = theheretic@gmail.com
     # signingkey = 
+
+[core]
+    sshCommand = ssh -i ~/.ssh/id_ed25519_personal -o IdentitiesOnly=yes

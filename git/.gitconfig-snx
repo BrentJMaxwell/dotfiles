@@ -1,3 +1,6 @@
 [user]
     name = Brent
     email = brent@cc.snxdao.io
+
+[core]
+    sshCommand = ssh -i ~/.ssh/id_ed25519_snx -o IdentitiesOnly=yes

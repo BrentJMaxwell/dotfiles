@@ -5,32 +5,36 @@ echo "Creating git directories..."
 mkdir -p ~/git/personal
 mkdir -p ~/git/snx
 
-# 2. OS Detection & Package Installation
-OS="$(uname -s)"
-case "${OS}" in
-    Linux*)     
-        if [ -f /etc/arch-release ]; then
-            echo "Detected Arch Linux"
-            sudo pacman -Syu --noconfirm git zsh stow aws-cli base-devel tmux
-            # Install yay or paru if needed for AUR packages like ghostty
-        elif grep -q Microsoft /proc/version; then
-            echo "Detected WSL"
-            sudo apt update && sudo apt install -y git zsh stow awscli build-essential tmux
-        fi
-        ;;
-    Darwin*)    
-        echo "Detected macOS"
-        # Check for Homebrew
-        if ! command -v brew &> /dev/null; then
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-        brew install git zsh stow awscli ghostty tmux
-        ;;
-    *)          
-        echo "Unknown OS: ${OS}" 
-        exit 1
-        ;;
-esac
+# 2. OS Detection & Package Installation (optional)
+if [ "${INSTALL_PACKAGES:-0}" = "1" ]; then
+    OS="$(uname -s)"
+    case "${OS}" in
+        Linux*)     
+            if [ -f /etc/arch-release ]; then
+                echo "Detected Arch Linux"
+                sudo pacman -Syu --noconfirm git zsh stow aws-cli base-devel tmux
+                # Install yay or paru if needed for AUR packages like ghostty
+            elif grep -q Microsoft /proc/version; then
+                echo "Detected WSL"
+                sudo apt update && sudo apt install -y git zsh stow awscli build-essential tmux
+            fi
+            ;;
+        Darwin*)    
+            echo "Detected macOS"
+            # Check for Homebrew
+            if ! command -v brew &> /dev/null; then
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            fi
+            brew install git zsh stow awscli ghostty tmux
+            ;;
+        *)          
+            echo "Unknown OS: ${OS}" 
+            exit 1
+            ;;
+    esac
+else
+    echo "Skipping package installation (set INSTALL_PACKAGES=1 to enable)."
+fi
 
 # 3. Install Oh My Zsh (if not present)
 ZSH_DIR="$HOME/.oh-my-zsh"
@@ -64,7 +68,8 @@ fi
 echo "Stowing dotfiles..."
 cd ~/git/personal/dotfiles
 
-BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="$HOME/.dotfiles-backup"
+BACKED_UP=0
 
 # Function to backup existing files before stowing
 backup_if_exists() {
@@ -72,7 +77,9 @@ backup_if_exists() {
     if [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
         echo "Backing up existing $file..."
         mkdir -p "$BACKUP_DIR/$(dirname "$file")"
+        rm -rf "$BACKUP_DIR/$file"
         mv "$HOME/$file" "$BACKUP_DIR/$file"
+        BACKED_UP=1
     elif [ -L "$HOME/$file" ]; then
         # Remove existing symlinks (likely from previous stow)
         rm -f "$HOME/$file"
@@ -100,17 +107,17 @@ backup_if_exists ".ssh/config"
 # Tmux config
 backup_if_exists ".tmux.conf"
 
-if [ -d "$BACKUP_DIR" ]; then
+if [ "$BACKED_UP" = "1" ]; then
     echo "📦 Existing configs backed up to: $BACKUP_DIR"
 fi
 
 # Stow each package (target home directory explicitly)
-stow -t "$HOME" git
-stow -t "$HOME" zsh
-stow -t "$HOME" ghostty
-stow -t "$HOME" aws
-stow -t "$HOME" ssh
-stow -t "$HOME" tmux
+stow -t "$HOME" --restow git
+stow -t "$HOME" --restow zsh
+stow -t "$HOME" --restow ghostty
+stow -t "$HOME" --restow aws
+stow -t "$HOME" --restow ssh
+stow -t "$HOME" --restow tmux
 
 # 5. AWS Setup (Optional Helper)
 if [ ! -f ~/.aws/config ]; then
@@ -118,21 +125,29 @@ if [ ! -f ~/.aws/config ]; then
 fi
 
 # 5.a. Tmux Plugin Installation
-if [ -f "$TPM_DIR/bin/install_plugins" ]; then
-    echo "Installing tmux plugins..."
-    "$TPM_DIR/bin/install_plugins"
+if [ "${INSTALL_TPM_PLUGINS:-0}" = "1" ]; then
+    if [ -f "$TPM_DIR/bin/install_plugins" ]; then
+        echo "Installing tmux plugins..."
+        "$TPM_DIR/bin/install_plugins"
+    else
+        echo "⚠️  Please install tmux plugins manually: prefix + I (usually Ctrl+b, then I) in tmux"
+    fi
 else
-    echo "⚠️  Please install tmux plugins manually: prefix + I (usually Ctrl+b, then I) in tmux"
+    echo "Skipping tmux plugin install (set INSTALL_TPM_PLUGINS=1 to enable)."
 fi
 
 # 6. Change Shell to Zsh
 # Check if the current shell is already zsh
-if [ "$SHELL" != "$(which zsh)" ]; then
-    echo "Changing default shell to zsh..."
-    # This will prompt for password
-    chsh -s $(which zsh)
+if [ "${CHANGE_SHELL:-0}" = "1" ]; then
+    if [ "$SHELL" != "$(which zsh)" ]; then
+        echo "Changing default shell to zsh..."
+        # This will prompt for password
+        chsh -s $(which zsh)
+    else
+        echo "Already using zsh."
+    fi
 else
-    echo "Already using zsh."
+    echo "Skipping shell change (set CHANGE_SHELL=1 to enable)."
 fi
 
 echo "✅ Dotfiles setup complete! Please restart your terminal."

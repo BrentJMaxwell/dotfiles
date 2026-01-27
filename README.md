@@ -2,12 +2,44 @@
 
 Personal dotfiles managed with GNU Stow.
 
+## Before Cloning (New Machine)
+
+1. **Add SSH keys**: Place your personal key at `~/.ssh/id_ed25519_personal` (chmod 600).
+2. **Optional SSH alias**: Add this to `~/.ssh/config` so the clone uses your personal key:
+
+```sshconfig
+Host github-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_personal
+    IdentitiesOnly yes
+```
+
+3. **Clone via alias**:
+
+```bash
+git clone git@github-personal:BrentJMaxwell/dotfiles.git ~/git/personal/dotfiles
+```
+
+After cloning, run the bootstrap script below.
+
 ## Quick Start
 
 ```bash
-git clone https://github.com/yourusername/dotfiles.git ~/git/personal/dotfiles
 cd ~/git/personal/dotfiles
 ./scripts/bootstrap.sh
+```
+
+Deterministic re-run (no package installs, no tmux plugin install, no shell change):
+
+```bash
+./scripts/bootstrap.sh
+```
+
+Optional one-time installs:
+
+```bash
+INSTALL_PACKAGES=1 INSTALL_TPM_PLUGINS=1 CHANGE_SHELL=1 ./scripts/bootstrap.sh
 ```
 
 ## What's Included
