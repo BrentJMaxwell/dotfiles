@@ -109,4 +109,4 @@ source $ZSH/oh-my-zsh.sh
 # Aliases
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
-alias wezterm='flatpak run org.wezfurlong.wezterm'
+alias wezterm='flatpak run org.wezfurlong.wezterm'export PATH="$HOME/.npm-global/bin:$PATH"

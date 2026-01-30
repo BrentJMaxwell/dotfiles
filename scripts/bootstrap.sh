@@ -12,7 +12,7 @@ if [ "${INSTALL_PACKAGES:-0}" = "1" ]; then
         Linux*)     
             if [ -f /etc/arch-release ]; then
                 echo "Detected Arch Linux"
-                sudo pacman -Syu --noconfirm git zsh stow aws-cli base-devel tmux
+                sudo pacman -Syu --noconfirm git zsh stow aws-cli-v2 base-devel tmux
                 # Install yay or paru if needed for AUR packages like ghostty
             elif grep -q Microsoft /proc/version; then
                 echo "Detected WSL"
