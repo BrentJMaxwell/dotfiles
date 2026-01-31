@@ -1,2 +1,6 @@
 .DS_Store
 **/.DS_Store
+
+# AWS cache files (contain temporary credentials)
+aws/.aws/cli/cache/
+aws/.aws/sso/cache/
