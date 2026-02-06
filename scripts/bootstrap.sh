@@ -64,6 +64,19 @@ if [ ! -d "$TPM_DIR" ]; then
     git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
 fi
 
+# 3.c. Install x-cmd (if not present)
+X_CMD_ROOT="$HOME/.x-cmd.root"
+if [ ! -f "$X_CMD_ROOT/X" ]; then
+    echo "Installing x-cmd..."
+    if command -v curl &>/dev/null; then
+        eval "$(curl -fsSL https://get.x-cmd.com)" || echo "⚠️  x-cmd install failed. Run: eval \"\$(curl -fsSL https://get.x-cmd.com)\""
+    else
+        echo "⚠️  curl required to install x-cmd. Install curl or run: wget -O- https://get.x-cmd.com | sh"
+    fi
+else
+    echo "x-cmd already installed at $X_CMD_ROOT"
+fi
+
 # 4. Stow (Symlink) Configs
 echo "Stowing dotfiles..."
 cd ~/git/personal/dotfiles

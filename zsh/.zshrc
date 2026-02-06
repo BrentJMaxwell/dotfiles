@@ -109,4 +109,12 @@ source $ZSH/oh-my-zsh.sh
 # Aliases
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
-alias wezterm='flatpak run org.wezfurlong.wezterm'export PATH="$HOME/.npm-global/bin:$PATH"
+alias wezterm='flatpak run org.wezfurlong.wezterm'
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# x-cmd: install if missing (bootstrap), then load
+if [ ! -f "$HOME/.x-cmd.root/X" ]; then
+  echo "x-cmd not found. Install with: eval \"\$(curl -fsSL https://get.x-cmd.com)\" or run your dotfiles bootstrap."
+else
+  . "$HOME/.x-cmd.root/X"
+fi
