@@ -1,0 +1,36 @@
+---
+description: Rules for editing dotfile configuration files
+globs: "**/.{gitconfig,gitconfig-*,zshrc,tmux.conf}"
+alwaysApply: false
+---
+
+# Configuration File Conventions
+
+## General
+
+- Follow the native syntax/format of each tool
+- Include inline comments explaining non-default or non-obvious settings
+- Theme preference: **Catppuccin Macchiato** wherever a theme is configurable
+- Font preference: **JetBrains Mono** where applicable
+
+## Git Config
+
+- `git/.gitconfig` — shared settings (aliases, core config, conditional includes)
+- `git/.gitconfig-personal` — personal identity (name, email, signing key)
+- `git/.gitconfig-snx` — work identity (name, email, signing key)
+- Conditional includes select the right identity based on repo path:
+  - `~/git/personal/` → personal config
+  - `~/git/snx/` → work config
+
+## Zsh Config
+
+- `zsh/.zshrc` — main shell config with Oh My Zsh
+- Plugins are managed via the `plugins=()` array in `.zshrc`
+- Custom plugins (zsh-autosuggestions, zsh-syntax-highlighting) are cloned
+  by the bootstrap script into `oh-my-zsh/custom/plugins/`
+
+## Tmux Config
+
+- `tmux/.tmux.conf` — tmux configuration
+- Plugin manager: TPM (Tmux Plugin Manager) at `~/.tmux/plugins/tpm`
+- Plugins are declared with `set -g @plugin` directives

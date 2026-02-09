@@ -1,0 +1,46 @@
+---
+description: Rules for editing shell scripts in this dotfiles repo
+globs: "**/*.sh"
+alwaysApply: false
+---
+
+# Shell Script Conventions
+
+## Style
+
+- Shebang: `#!/bin/bash`
+- Always include `set -euo pipefail` at the top
+- Quote all variable expansions: `"${var}"`, `"$1"`
+- Use `[[ ]]` for conditionals (never `[ ]`)
+- Use `snake_case` for variables and function names
+- Function style: `name() {` (no `function` keyword)
+- Section headers: `# ── Section Title ──` with box-drawing characters
+
+## Logging
+
+The bootstrap script has established logging helpers. Use them consistently:
+
+- `section "Title"` — major section header
+- `log_info "message"` — informational output
+- `log_success "message"` — success confirmation
+- `log_warn "message"` — warning
+- `log_error "message"` — error
+- `log_skip "message"` — skipped step
+- `log_detail "message"` — subordinate detail
+- `prompt_yn "question" [Y|N]` — yes/no prompt with default
+
+## Platform Awareness
+
+This script supports Arch Linux, WSL/Debian/Ubuntu, and macOS. When adding
+platform-specific logic:
+
+- Detect OS using the existing `detect_os` function
+- Use the established `OS` variable (`arch`, `wsl`, `macos`, `unknown`)
+- Always handle all three platforms or explicitly skip with `log_skip`
+
+## Safety
+
+- Never install packages without the `INSTALL_PACKAGES=1` gate
+- Never change system state (shell, services) without explicit user opt-in
+- Always back up files before overwriting with `backup_file`
+- Use `prompt_yn` for destructive or stateful operations

@@ -1,0 +1,31 @@
+---
+description: Rules for working with GNU Stow package directories
+globs: "{aws,git,ghostty,ssh,tmux,zsh}/**"
+alwaysApply: false
+---
+
+# GNU Stow Package Rules
+
+## How Stow Works
+
+Each top-level directory (aws, git, ghostty, ssh, tmux, zsh) is a Stow package.
+The internal structure mirrors `$HOME`. When stowed, files become symlinks:
+
+- `git/.gitconfig` → `~/.gitconfig`
+- `ghostty/.config/ghostty/config` → `~/.config/ghostty/config`
+- `zsh/.zshrc` → `~/.zshrc`
+
+## Critical Rules
+
+- **Do not** flatten or reorganise the directory hierarchy within a package —
+  the path relative to the package root must match the path relative to `$HOME`
+- **Do not** add files that contain secrets (private keys, tokens, credentials)
+- When adding a new file to a package, verify the target path is correct by
+  checking: `<package>/<relative-path>` should symlink to `~/<relative-path>`
+- When creating a **new** Stow package (new top-level directory), also update
+  the `STOW_PACKAGES` array in `scripts/bootstrap.sh`
+
+## Sensitive Directories
+
+- `aws/.aws/` — may contain credential caches; only `config` should be tracked
+- `ssh/.ssh/` — only `config` should be tracked; NEVER add private keys
