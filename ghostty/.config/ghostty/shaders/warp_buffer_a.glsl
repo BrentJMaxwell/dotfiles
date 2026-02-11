@@ -1,3 +1,4 @@
+// Time loop fractal from https://www.shadertoy.com/view/33tfRj
 const float threshold = 0.15;
 const float effect_strength = 0.2;
 

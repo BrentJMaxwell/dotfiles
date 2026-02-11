@@ -118,3 +118,5 @@ if [ ! -f "$HOME/.x-cmd.root/X" ]; then
 else
   . "$HOME/.x-cmd.root/X"
 fi
+
+[ ! -f "$HOME/.x-cmd.root/X" ] || . "$HOME/.x-cmd.root/X" # boot up x-cmd.
