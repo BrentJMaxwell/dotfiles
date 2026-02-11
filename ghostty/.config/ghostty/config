@@ -35,5 +35,8 @@ mouse-scroll-multiplier = 0.95
 # More here: https://catskull.net/fun-with-ghostty-shaders.html and here: https://github.com/0xhckr/ghostty-shaders 
 # and here: https://www.shadertoy.com/ and here: https://github.com/sahaj-b/ghostty-cursor-shaders
 #custom-shader = ~/.config/ghostty/shaders/matrix-hallway.glsl
-custom-shader = ~/.config/ghostty/shaders/just-snow.glsl
+#custom-shader = ~/.config/ghostty/shaders/just-snow.glsl
 #custom-shader = shaders/cursor_warp.glsl
+#custom-shader = ~/.config/ghostty/shaders/gyroid.glsl
+#custom-shader = ~/.config/ghostty/shaders/just-snow.glsl
+custom-shader = ~/.config/ghostty/shaders/warp_buffer_a.glsl
